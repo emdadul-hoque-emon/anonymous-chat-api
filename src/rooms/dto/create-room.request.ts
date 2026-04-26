@@ -9,7 +9,4 @@ export class CreateRoomRequest {
     message: 'name can only contain alphanumeric characters and hyphens',
   })
   name: string;
-
-  @IsString()
-  ownerId: string;
 }

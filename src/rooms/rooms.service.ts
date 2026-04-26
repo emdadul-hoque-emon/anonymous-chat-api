@@ -22,9 +22,10 @@ export class RoomsService {
         },
       })
       .then((res) =>
-        res.map(({ owner, ownerId, ...room }) => ({
+        res.map(({ owner, ownerId, updatedAt, ...room }) => ({
           ...room,
           createdBy: owner.username,
+          activeUsers: 0,
         })),
       );
     return {
@@ -35,19 +36,21 @@ export class RoomsService {
   async getRoom(roomId: string) {
     try {
       const room = await this.db.query.rooms.findFirst({
-        where: (room) => eq(room.name, roomId),
+        where: (room) => eq(room.id, roomId),
         with: {
-          owner: {
-            columns: { id: true, username: true },
-          },
+          owner: true,
         },
       });
 
       if (!room) {
         throw roomExceptions.NOT_FOUND(roomId);
       }
+
+      const { owner, ownerId, updatedAt, ...rest } = room;
       return {
-        room,
+        ...rest,
+        activeUsers: 0,
+        createdBy: owner.username,
       };
     } catch (error) {
       console.log(error);
@@ -88,6 +91,29 @@ export class RoomsService {
           throw httpExceptions.BAD_REQUEST(pgError?.detail);
         }
       }
+      throw error;
+    }
+  }
+
+  async deleteRoom(roomId: string, userId: string) {
+    try {
+      const room = await this.db.query.rooms.findFirst({
+        where: (room) => eq(room.id, roomId),
+      });
+
+      if (!room) {
+        throw roomExceptions.NOT_FOUND(roomId);
+      }
+      if (room.ownerId !== userId) {
+        throw httpExceptions.FORBIDDEN(
+          'Only the room creator can delete this room',
+        );
+      }
+
+      await this.db.delete(schema.rooms).where(eq(schema.rooms.id, roomId));
+      return { deleted: true };
+    } catch (error) {
+      console.log(error);
       throw error;
     }
   }

@@ -3,12 +3,14 @@ import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { DATABASE_CONNECTION } from '../database/constant';
 import * as schema from '../users/schema';
 import { eq } from 'drizzle-orm';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
   constructor(
     @Inject(DATABASE_CONNECTION)
     private readonly database: NodePgDatabase<typeof schema>,
+    private readonly jwtService: JwtService,
   ) {}
 
   async login(payload: typeof schema.users.$inferInsert) {
@@ -18,8 +20,11 @@ export class AuthService {
 
     if (user) {
       return {
+        sessionToken: this.jwtService.sign({
+          id: user.id,
+          username: user.username,
+        }),
         user,
-        sessionToken: 'token',
         isNewUser: false,
       };
     } else {
@@ -28,8 +33,11 @@ export class AuthService {
         .values(payload)
         .returning();
       return {
+        sessionToken: this.jwtService.sign({
+          id: newUser[0].id,
+          username: newUser[0].username,
+        }),
         user: newUser[0],
-        sessionToken: 'token',
         isNewUser: true,
       };
     }

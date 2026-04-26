@@ -5,7 +5,7 @@ export const httpExceptions = Object.freeze({
   BAD_REQUEST: (message = 'Bad request', meta?: any) =>
     new AppException(HttpStatus.BAD_REQUEST, 'BAD_REQUEST', message, meta),
 
-  UNAUTHORIZED: (message = 'Unauthorized', meta?: any) =>
+  UNAUTHORIZED: (message = 'Missing or expired session token', meta?: any) =>
     new AppException(HttpStatus.UNAUTHORIZED, 'UNAUTHORIZED', message, meta),
 
   FORBIDDEN: (message = 'Forbidden', meta?: any) =>
