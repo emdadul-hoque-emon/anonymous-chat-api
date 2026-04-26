@@ -8,6 +8,20 @@
       "when": 1777154974696,
       "tag": "0000_pale_felicia_hardy",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1777170411404,
+      "tag": "0001_complete_the_liberteens",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1777178829217,
+      "tag": "0002_equal_garia",
+      "breakpoints": true
     }
   ]
 }

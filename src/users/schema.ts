@@ -1,5 +1,7 @@
+import { relations } from 'drizzle-orm';
 import { uuid } from 'drizzle-orm/pg-core';
 import { timestamp, pgTable, serial, varchar } from 'drizzle-orm/pg-core';
+import { rooms } from '../rooms/schema';
 
 export const users = pgTable('users', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -11,3 +13,7 @@ export const users = pgTable('users', {
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });
+
+export const userRelations = relations(users, ({ many }) => ({
+  rooms: many(rooms),
+}));
