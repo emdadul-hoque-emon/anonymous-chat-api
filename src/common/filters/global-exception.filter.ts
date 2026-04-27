@@ -28,6 +28,10 @@ export class GlobalExceptionFilter implements ExceptionFilter {
         status = 409;
         code = 'UNIQUE_CONSTRAINT_VIOLATION';
         message = 'Duplicate value violates unique constraint';
+      } else {
+        status = HttpStatus.INTERNAL_SERVER_ERROR;
+        code = 'INTERNAL_SERVER_ERROR';
+        message = pgError?.detail;
       }
     }
 
@@ -49,6 +53,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       }
     }
 
+    console.log(exception);
     response.status(status).json({
       success: false,
       error: {
