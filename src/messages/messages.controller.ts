@@ -4,6 +4,7 @@ import {
   Get,
   Param,
   Post,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -19,8 +20,12 @@ export class MessagesController {
   constructor(private readonly messagesService: MessagesService) {}
 
   @Get()
-  async getMessages(@Param('roomId') roomId: string) {
-    return await this.messagesService.getMessages(roomId);
+  async getMessages(
+    @Param('roomId') roomId: string,
+    @Query('before') before?: string,
+    @Query('limit') limit?: number,
+  ) {
+    return await this.messagesService.getMessages(roomId, limit, before);
   }
 
   @Post()
