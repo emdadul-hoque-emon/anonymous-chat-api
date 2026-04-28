@@ -9,11 +9,11 @@ export class MessageSubscriber implements OnModuleInit {
     private gateway: ChatGateway,
   ) {}
 
-  onModuleInit() {
-    this.redis.sub.subscribe('room:*:messages');
+  async onModuleInit() {
+    await this.redis.sub.psubscribe('room:*:messages');
 
-    this.redis.sub.on('message', (channel, msg) => {
-      console.log(channel);
+    // ✅ MUST use pmessage
+    this.redis.sub.on('pmessage', (pattern, channel, msg) => {
       const roomId = channel.split(':')[1];
       const message = JSON.parse(msg);
 

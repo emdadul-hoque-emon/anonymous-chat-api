@@ -85,11 +85,12 @@ export class MessagesService {
     }
 
     const { user, userId, ...rest } = fullMessage;
+    const formattedMsg = { ...rest, username: user.username };
 
     await this.redis.pub.publish(
       `room:${payload.roomId}:messages`,
-      JSON.stringify(message),
+      JSON.stringify(formattedMsg),
     );
-    return { ...rest, username: user.username };
+    return formattedMsg;
   }
 }

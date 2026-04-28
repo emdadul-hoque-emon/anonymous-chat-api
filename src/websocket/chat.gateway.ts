@@ -21,9 +21,7 @@ export class ChatGateway
 
   constructor(private redis: RedisService) {}
 
-  afterInit() {
-    console.log('🚀 Chat Gateway Initialized');
-  }
+  afterInit() {}
 
   async handleConnection(socket: Socket) {
     const { token, roomId } = socket.handshake.query as any;
