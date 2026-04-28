@@ -6,30 +6,37 @@ import { eq } from 'drizzle-orm';
 import { roomExceptions } from '../common/exceptions/room.exceptions';
 import { DrizzleQueryError } from 'drizzle-orm';
 import { httpExceptions } from '../common/exceptions/http.exceptions';
+import { RedisService } from '../redis/redis.service';
 
 @Injectable()
 export class RoomsService {
   constructor(
     @Inject(DATABASE_CONNECTION)
     private readonly db: NodePgDatabase<typeof schema>,
+    private readonly redis: RedisService,
   ) {}
 
   async getRooms() {
-    const rooms = await this.db.query.rooms
-      .findMany({
-        with: {
-          owner: true,
-        },
-      })
-      .then((res) =>
-        res.map(({ owner, ownerId, updatedAt, ...room }) => ({
+    const rooms = await this.db.query.rooms.findMany({
+      with: {
+        owner: true,
+      },
+    });
+
+    const roomsWithActiveUsers = await Promise.all(
+      rooms.map(async ({ owner, ownerId, updatedAt, ...room }) => {
+        const activeUsers = await this.redis.getUserCount(room.id);
+
+        return {
           ...room,
           createdBy: owner.username,
-          activeUsers: 0,
-        })),
-      );
+          activeUsers,
+        };
+      }),
+    );
+
     return {
-      rooms,
+      rooms: roomsWithActiveUsers,
     };
   }
 

@@ -29,7 +29,6 @@ export class RoomsController {
 
   @Get()
   async getRooms(@Req() req: Request) {
-    console.log(req.user);
     return this.roomsService.getRooms();
   }
 

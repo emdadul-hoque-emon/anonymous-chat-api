@@ -8,6 +8,13 @@
       "when": 1777312642726,
       "tag": "0000_quiet_senator_kelly",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1777369721703,
+      "tag": "0001_strange_maximus",
+      "breakpoints": true
     }
   ]
 }

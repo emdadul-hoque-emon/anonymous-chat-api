@@ -9,7 +9,9 @@ export const messages = pgTable(
   {
     id: uuid('id').primaryKey().defaultRandom(),
     content: varchar('content', { length: 256 }).notNull(),
-    createdAt: timestamp('created_at').notNull().defaultNow(),
+    createdAt: timestamp('created_at', { withTimezone: true })
+      .notNull()
+      .defaultNow(),
 
     roomId: uuid('room_id')
       .notNull()

@@ -1,20 +1,23 @@
-import Redis from 'ioredis';
-import { Server } from 'socket.io';
+import { Injectable, OnModuleInit } from '@nestjs/common';
+import { RedisService } from '../redis/redis.service';
+import { ChatGateway } from './chat.gateway';
 
-export class MessageSubscriber {
-  private sub: Redis;
+@Injectable()
+export class MessageSubscriber implements OnModuleInit {
+  constructor(
+    private redis: RedisService,
+    private gateway: ChatGateway,
+  ) {}
 
-  constructor(private io: Server) {
-    this.sub = new Redis(process.env.REDIS_URL!);
+  onModuleInit() {
+    this.redis.sub.subscribe('room:*:messages');
 
-    this.sub.psubscribe('room:*:messages');
-
-    this.sub.on('pmessage', (_pattern, channel, message) => {
+    this.redis.sub.on('message', (channel, msg) => {
+      console.log(channel);
       const roomId = channel.split(':')[1];
+      const message = JSON.parse(msg);
 
-      const parsed = JSON.parse(message);
-
-      this.io.to(roomId).emit('message:new', parsed);
+      this.gateway.server.to(roomId).emit('message:new', message);
     });
   }
 }

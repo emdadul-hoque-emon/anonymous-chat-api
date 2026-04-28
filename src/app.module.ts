@@ -6,9 +6,19 @@ import { AuthModule } from './auth/auth.module';
 import { RoomsModule } from './rooms/rooms.module';
 import { MessagesModule } from './messages/messages.module';
 import { RedisModule } from './redis/redis.module';
+import { WebsocketModule } from './websocket/websocket.module';
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true }), DatabaseModule, UsersModule, AuthModule, RoomsModule, MessagesModule, RedisModule],
+  imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
+    DatabaseModule,
+    UsersModule,
+    AuthModule,
+    RoomsModule,
+    MessagesModule,
+    RedisModule,
+    WebsocketModule,
+  ],
   controllers: [],
   providers: [],
 })
