@@ -147,6 +147,14 @@ REDIS_URL="redis://localhost:6379"
 
 ### Development Mode (with auto-reload)
 
+### synce database
+
+```base
+npx drizzle-kit push
+```
+
+### then start then dev server
+
 ```bash
 npm run dev
 # or
