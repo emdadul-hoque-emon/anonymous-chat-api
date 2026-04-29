@@ -1,5 +1,9 @@
 # Anonymous-chat-api Architecture
 
+## Deployment URL
+
+Live application URL: https://anonymous-chat-api-dwtw.onrender.com
+
 ## Overview
 
 Anonymous-chat-api is a NestJS-based chat backend built around three core subsystems:
@@ -149,9 +153,3 @@ To support roughly 10 times the current load, I would change the system in this 
 - The current code does not implement refresh tokens, offline delivery, message acknowledgements, or replay protection.
 - `origin: '*'` is permissive for development, but it is too open for a locked-down production deployment.
 - The Redis adapter helper is present but still needs to be wired into startup before the WebSocket layer is truly cluster-safe.
-
-## Deployment URL
-
-Live application URL: not currently available in this workspace.
-
-If you deploy Anonymous-chat-api to Render or another platform, place the public URL here so the architecture document stays complete.
