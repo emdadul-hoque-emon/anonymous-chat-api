@@ -15,7 +15,10 @@ import type { Request } from 'express';
 import { httpExceptions } from '../common/exceptions/http.exceptions';
 
 @UseGuards(JwtAuthGuard)
-@Controller('rooms/:roomId/messages')
+@Controller({
+  path: 'rooms/:roomId/messages',
+  version: '1',
+})
 export class MessagesController {
   constructor(private readonly messagesService: MessagesService) {}
 

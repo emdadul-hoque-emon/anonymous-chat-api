@@ -23,7 +23,10 @@ declare global {
 }
 
 @UseGuards(JwtAuthGuard)
-@Controller('rooms')
+@Controller({
+  path: 'rooms',
+  version: '1',
+})
 export class RoomsController {
   constructor(private readonly roomsService: RoomsService) {}
 

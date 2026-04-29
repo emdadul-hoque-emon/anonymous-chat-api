@@ -3,7 +3,10 @@ import { AuthService } from './auth.service';
 import { LoginDto } from '../users/dto/create-user.request';
 import type { Response } from 'express';
 
-@Controller('')
+@Controller({
+  path: '',
+  version: '1',
+})
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 

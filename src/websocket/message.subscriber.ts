@@ -10,14 +10,21 @@ export class MessageSubscriber implements OnModuleInit {
   ) {}
 
   async onModuleInit() {
-    await this.redis.sub.psubscribe('room:*:messages');
+    await this.redis.sub.psubscribe('room:*');
 
-    // ✅ MUST use pmessage
     this.redis.sub.on('pmessage', (pattern, channel, msg) => {
-      const roomId = channel.split(':')[1];
-      const message = JSON.parse(msg);
+      const [, roomId, type] = channel.split(':');
 
-      this.gateway.server.to(roomId).emit('message:new', message);
+      if (type === 'messages') {
+        const message = JSON.parse(msg);
+        this.gateway.server.to(roomId).emit('message:new', message);
+      }
+
+      if (type === 'delete') {
+        this.gateway.server.to(roomId).emit('room:deleted', {
+          roomId,
+        });
+      }
     });
   }
 }

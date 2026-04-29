@@ -1,12 +1,20 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { BadRequestException, ValidationPipe } from '@nestjs/common';
+import {
+  BadRequestException,
+  ValidationPipe,
+  VersioningType,
+} from '@nestjs/common';
 import { ResponseInterceptor } from './common/interceptors/response.interceptor';
 import { GlobalExceptionFilter } from './common/filters/global-exception.filter';
 import { Server } from 'socket.io';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.setGlobalPrefix('api');
+  app.enableVersioning({
+    type: VersioningType.URI,
+  });
   app.enableCors({
     origin: '*', // or specify frontend URL
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',

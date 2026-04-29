@@ -1,0 +1,41 @@
+flowchart LR
+  Client[Web / Mobile Client]
+
+  HTTP[Nest HTTP Controllers]
+  Guard[Auth Guard]
+
+  GW[Socket.IO Gateway /chat]
+
+  Auth[Auth Module]
+  Msg[Messages Module]
+  Rooms[Rooms Module]
+
+  DB[(PostgreSQL)]
+  Redis[(Redis)]
+
+  Sub[Message Subscriber]
+
+  Adapter[Socket.IO Redis Adapter]
+
+  Client -->|REST API| HTTP
+  HTTP --> Guard
+  Guard --> Auth
+  Guard --> Rooms
+  Guard --> Msg
+
+  Auth -->|create/login user| DB
+  Auth -->|store session| Redis
+
+  Rooms --> DB
+  Msg --> DB
+  Msg -->|publish message| Redis
+
+  Redis -->|message channels| Sub
+  Sub -->|emit event| GW
+
+  Client -->|WS: token + roomId| GW
+  GW -->|validate session| Redis
+  GW -->|track presence| Redis
+
+  GW <--> Adapter
+  Adapter <--> Redis

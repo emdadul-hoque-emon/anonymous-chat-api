@@ -118,6 +118,7 @@ export class RoomsService {
       }
 
       await this.db.delete(schema.rooms).where(eq(schema.rooms.id, roomId));
+      this.redis.pub.publish(`room:${roomId}:delete`, '');
       return { deleted: true };
     } catch (error) {
       console.log(error);
